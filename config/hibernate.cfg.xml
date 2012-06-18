@@ -1,0 +1,19 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+    
+<hibernate-configuration>
+
+  <session-factory>
+    <mapping package="ca.jc2brown.mmdb.model"/>
+    <mapping class="ca.jc2brown.mmdb.model.Actor"/>
+    <mapping class="ca.jc2brown.mmdb.model.Director"/>
+    <mapping class="ca.jc2brown.mmdb.model.Genre"/>
+    <mapping class="ca.jc2brown.mmdb.model.Movie"/>
+    <mapping class="ca.jc2brown.mmdb.model.MovieFile"/>
+    <mapping class="ca.jc2brown.mmdb.model.Person"/>
+    <mapping class="ca.jc2brown.mmdb.model.Rating"/>
+    <mapping class="ca.jc2brown.mmdb.model.Writer"/>
+  </session-factory>
+  
+</hibernate-configuration>
