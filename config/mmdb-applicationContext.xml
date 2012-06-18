@@ -23,7 +23,7 @@
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${db.driver}" />
-		<property name="url" value="${db.url}/${db.schema}" />
+		<property name="url" value="${db.url}/${db.schema};shutdown=true" />
 		<property name="username" value="${db.username}" />
 		<property name="password" value="${db.password}" />
 	</bean>
@@ -44,7 +44,7 @@
 				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.use_sql_comments">true</prop>
 				<prop key="hibernate.default_schema">${db.schema}</prop>
-				<prop key="hibernate.hbm2ddl.auto">create</prop>
+				<prop key="hibernate.hbm2ddl.auto">${db.hbm2ddl.auto}</prop>
 			</props>
 		</property>
 	</bean>
@@ -56,6 +56,13 @@
 	<!--
 		DAOs
 	-->
+	
+	
+	
+	<bean id="MediaManagerDB" class="ca.jc2brown.mmdb.MediaManagerDB">
+		<property name="sessionFactory" ref="sessionFactory" />		
+		<property name="main" ref="MediaManagerDB" />	
+	</bean>
 	
 
 </beans>

@@ -33,7 +33,7 @@ public class Actor extends Person {
 
 	@Override
 	public String toString() {
-		return super.toString() + "/n" + movies.toString();
+		return super.toString() + "\n" + movies.toString();
 	}
 	
 	

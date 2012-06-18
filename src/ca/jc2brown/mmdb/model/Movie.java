@@ -104,4 +104,11 @@ public class Movie extends BaseEntity {
 	public Movie() {
 		super();
 	}	
+	
+	
+	@Override
+	public String toString() {
+		return super.toString() + 
+				"\ntitle=" + title;
+	}
 }
