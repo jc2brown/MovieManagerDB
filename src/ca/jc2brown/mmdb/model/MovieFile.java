@@ -1,9 +1,11 @@
 package ca.jc2brown.mmdb.model;
 
+
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 
 @Entity
 @Table(name="MovieFiles")
@@ -48,6 +50,4 @@ public class MovieFile extends BaseEntity {
 	public MovieFile() {
 		super();
 	}
-
-
 }

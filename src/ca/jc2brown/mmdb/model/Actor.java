@@ -9,10 +9,13 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import ca.jc2brown.mmdb.model.mapping.MappedField;
+
 @Entity
 @Table(name="People")
 public class Actor extends Person {
 	
+	@MappedField("moviesToString")
 	private Set<Movie> movies;
 	
 	@ManyToMany(cascade = CascadeType.ALL)
@@ -30,11 +33,12 @@ public class Actor extends Person {
 	public Actor() {
 		super();
 	}
-
-	@Override
-	public String toString() {
-		return super.toString() + "\n" + movies.toString();
+	
+	public String moviesToString() {
+		StringBuffer sb = new StringBuffer();
+		for ( Movie movie : movies ) {
+			sb.append(movie.toLine());
+		}
+		return sb.toString();
 	}
-	
-	
 }

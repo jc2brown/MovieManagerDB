@@ -1,6 +1,5 @@
 package ca.jc2brown.mmdb.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -34,8 +33,4 @@ public class Rating extends BaseEntity {
 	public Rating() {
 		super();
 	}
-
-
-
-
 }

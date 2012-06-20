@@ -30,7 +30,5 @@ public class Writer extends Person {
 	public Writer() {
 		super();
 	}
-
-	
 	
 }

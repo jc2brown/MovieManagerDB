@@ -1,11 +1,17 @@
 package ca.jc2brown.mmdb.model;
 
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
+import ca.jc2brown.mmdb.model.mapping.MappedClass;
+import ca.jc2brown.mmdb.model.mapping.MappedField;
+
 @MappedSuperclass
+@MappedClass
 public abstract class Person extends BaseEntity {
 	
+	@MappedField
 	private String lastName;
 	private String firstName;
 	private String fullName;
@@ -36,14 +42,4 @@ public abstract class Person extends BaseEntity {
 	public Person() {
 		super();
 	}
-	
-	@Override
-	public String toString() {
-		return super.toString() + 
-						"\nfullName=" + fullName +
-						"\nfirstName=" + firstName +
-						"\nlastName=" + lastName;
-	}
-	
-	
 }

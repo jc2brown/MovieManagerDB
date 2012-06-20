@@ -4,15 +4,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import ca.jc2brown.mmdb.model.mapping.MappedField;
+
 
 @Entity
 @Table(name="Movies")
@@ -25,6 +26,7 @@ public class Movie extends BaseEntity {
 	private String reception;
 	private Date released;
 	private Long runtime;
+	@MappedField
 	private String title;
 	private Long year;
 	
@@ -100,15 +102,9 @@ public class Movie extends BaseEntity {
 	}
 
 	
-	
 	public Movie() {
 		super();
 	}	
 	
-	
-	@Override
-	public String toString() {
-		return super.toString() + 
-				"\ntitle=" + title;
-	}
+
 }

@@ -20,8 +20,5 @@ public class Genre extends BaseEntity {
 	public Genre() {
 		super();
 	}
-
-
-
-
+	
 }

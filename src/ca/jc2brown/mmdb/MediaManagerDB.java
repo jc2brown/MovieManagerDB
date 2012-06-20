@@ -1,23 +1,26 @@
 package ca.jc2brown.mmdb;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Service;
 
+import ca.jc2brown.mmdb.dao.ActorDai;
+import ca.jc2brown.mmdb.gui.ui.ApplicationWindow;
 import ca.jc2brown.mmdb.model.Actor;
+import ca.jc2brown.mmdb.model.BaseEntity;
 import ca.jc2brown.mmdb.model.Movie;
+import ca.jc2brown.mmdb.model.mapping.MappingConfigurer;
 import ca.jc2brown.mmdb.utils.GroupedProperties;
-import ca.jc2brown.mmdb.utils.Utils;
 
-
+@Service
 public class MediaManagerDB {
 	
 	// Log4j handle
@@ -28,19 +31,20 @@ public class MediaManagerDB {
 	//
 	
 	// Application instance
-	private static MediaManagerDB main;
-	
+	private static MediaManagerDB mmdb;
+
 	public void setMain(MediaManagerDB main) {
-		MediaManagerDB.main = main;
+		MediaManagerDB.mmdb = main;
 	}
 	
-
+	// Application context
+	private static ApplicationContext context;
+	
 	// Program entry: creates and runs an instance of the application
 	public static void main(String[] args) {
 		log.info("Starting application..." );
-		new ClassPathXmlApplicationContext("mmdb-applicationContext.xml");
-		//main = new MediaManagerDB();	// Spring will handle this
-		main.run();
+		context = new ClassPathXmlApplicationContext("mmdb-applicationContext.xml");
+		mmdb.run();
 		log.info("Done." );
 	}
  
@@ -55,7 +59,8 @@ public class MediaManagerDB {
   	// Graceful termination with cleanup where possible
   	public static void quit() {
   		log.debug("Shutdown requested");
-  		main.shutdown();
+  		mmdb.shutdown();
+  		((ClassPathXmlApplicationContext) context).close(); 
   	}
 	
 
@@ -63,124 +68,114 @@ public class MediaManagerDB {
 	// Application 
 	//
 
+	private GroupedProperties mmdbProperties;
+	private ApplicationWindow window;
 	
-	// Healthy program flag
-	// Also prevents multiple shutdown threads
-	private boolean alive = false;
-	private SessionFactory sessionFactory;
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+	private ActorDai actorDao;
+	
+	@Autowired
+	public void setActorDao(ActorDai actorDao) {
+		this.actorDao = actorDao;
 	}
 	
+	
+	@Autowired
+	public void setMmdbProperties(GroupedProperties mmdbProperties) {
+		this.mmdbProperties = mmdbProperties;
+	}
+
+	@Autowired
+	public void setWindow(ApplicationWindow window) {
+		this.window = window;
+	}
+
 	// Application initilization
   	public MediaManagerDB() {
   		log.info("Initializing...");
-  		log.debug("Loading configuration files...");
-  		GroupedProperties mmdbProperties = Utils.getProperties("config/mmdb.properties");
     }
     
+  	@PostConstruct
+  	public void init() {
+  		window.open();
+  	}
+  	
+  	@PreDestroy
+  	public void destroy() {
+  		log.debug("destroy()");
+  	}
+  	
+  	
+
+  	
+  	public void test() {
+  		Actor actor = new Actor();
+  		actor.setId(123L);
+    	actor.setFullName("Chris Brown");
+    	actor.setFirstName("Chris");
+    	actor.setLastName("Brown");
+    	Set<Movie> movies = new HashSet<Movie>();
+    	Movie movie = new Movie();
+    	movie.setTitle("The Good");
+    	movies.add( movie );
+    	actor.setMovies(movies);
+    	
+    	actor = actorDao.makePersistent(actor);
+    	System.out.println(actor);
+    	System.out.println(movie);
+    	
+
+    	actorDao.makeTransient(actor);
+    	actor.setFullName("Stephen Harper");
+    	actor.setFirstName("Stephen");
+    	actor.setLastName("Harper");
+    	movie.setTitle("The Bad");
+    	System.out.println(actor);
+    	
+
+    	for (Actor a : actorDao.findAll() ) {
+    		System.err.println(a);
+    	}
+    	
+    	
+    	actor = actorDao.findById(2L, false);
+    	System.out.println(actor);
+  	}
+  	
+  	
     // Begin regular execution
   	public void run() {
-  		System.out.println("\nType :q followed by Enter to quit the program.");
-  		BufferedReader in = new BufferedReader( new InputStreamReader (System.in) );
+  		
+  		String basePackage = BaseEntity.class.getPackage().getName();
+  		MappingConfigurer.configure(basePackage);
+  		
+  		Actor actor = new Actor();
+  		actor.setId(123L);
+    	actor.setFullName("Chris Brown");
+    	actor.setFirstName("Chris");
+    	actor.setLastName("Brown");
+    	Set<Movie> movies = new HashSet<Movie>();
+    	Movie movie = new Movie();
+    	movie.setTitle("The Good");
+    	movies.add( movie );
+    	actor.setMovies(movies);
+  		
+    	System.err.println(actor.toMap());
+    	
+  		System.out.println( movie );
+  		System.out.println( actor );
   		
   		
-  		
-    	if (  false  ) { 
-        	
-	    	Actor actor = new Actor();
-	    	actor.setFullName("Chris Brown");
-	    	actor.setFirstName("Chris");
-	    	actor.setLastName("Brown");
-	    	Set<Movie> movies = new HashSet<Movie>();
-	    	Movie movie = new Movie();
-	    	movie.setTitle("The Good");
-	    	movies.add( movie );
-	    	actor.setMovies(movies);
-	    	
-	    	Session session = sessionFactory.openSession();
-	    	Transaction tx = session.beginTransaction();
-	    	tx.begin();
-	    	session.save(actor);
-	    	tx.commit();
-	    	session.close();
-	
-	    	System.out.println(actor);
-	    	
-	    	
-	    	actor.setFullName("Stephen Harper");
-	    	actor.setFirstName("Stephen");
-	    	actor.setLastName("Harper");
-	    	movie.setTitle("The Bad");
-	    	System.out.println(actor);
-	
-	    	session = sessionFactory.openSession();
-	    	tx = session.beginTransaction();
-	    	tx.begin();
-	    	actor = (Actor)session.get(Actor.class, 1L);
-	    	tx.commit();
-	
-	    	System.out.println(actor);
-	    	
-	    
-    	} else {
-    		
-        	Actor actor = new Actor();
-        	actor.setId(1L);
-	    	//actor.setFullName("Stephen Harper");
-	    	//actor.setFirstName("Stephen");
-	    	//actor.setLastName("Harper");
-	    	Set<Movie> movies = new HashSet<Movie>();
-	    	Movie movie = new Movie();
-	    	//movie.setTitle("The Bad");
-	    	movies.add( movie );
-	    	actor.setMovies(movies);
-
-	    	System.out.println(actor);
-	    	
-	    	Session session = sessionFactory.openSession();
-	    	Transaction tx = session.beginTransaction();
-	    	tx.begin();
-	    	actor = (Actor)session.get(Actor.class, actor.getId());
-	    	tx.commit();
-	
-	    	System.out.println(actor);
-	    	
-	    	
-    	}
-  		
-  		
-  		
-  		
-  		
-  		while ( alive ) {
-  			String line = null;
-  			try {
-  				line = in.readLine();
-  			} catch (IOException e) {
-  				e.printStackTrace();
-  			}
-  			if (alive && ":q".equalsIgnoreCase(line.trim()) ) {
-  				log.debug("User quit");
-  				MediaManagerDB.quit();	
-  			}
-  		}
-  		try {
-  			in.close();
-  		} catch (IOException e) {
-  			e.printStackTrace();
-  		}
-  		
+  		/*
+  		TableFieldParser tfp = new TableFieldParser();
+  		tfp.parse(Actor.class);
+  		test();*/
 		MediaManagerDB.quit();	
   	}
   	
   	private void shutdown() {
-  		if ( alive ) {
-  	  		log.info("Starting shutdown...");
-  			alive = false;
-  			Thread shutdown = new Thread(new ShutdownThread());
-  			shutdown.run();
-  		}
+  		log.info("Starting shutdown...");
+		Thread shutdown = new Thread(new ShutdownThread());
+		shutdown.run();
   	}
   	
 

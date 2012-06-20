@@ -4,12 +4,19 @@
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
                	http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        			http://www.springframework.org/schema/aop
        			http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
        			http://www.springframework.org/schema/tx
-       			http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+       			http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+				http://www.springframework.org/schema/context
+				http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+				
+				<context:annotation-config />
+
+<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
 
 	<!--
 		Data Source
@@ -27,8 +34,6 @@
 		<property name="username" value="${db.username}" />
 		<property name="password" value="${db.password}" />
 	</bean>
-	
-	<tx:annotation-driven/>
 
 	
 	<!--
@@ -42,6 +47,7 @@
 			<props>
 				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
 				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">false</prop>
 				<prop key="hibernate.use_sql_comments">true</prop>
 				<prop key="hibernate.default_schema">${db.schema}</prop>
 				<prop key="hibernate.hbm2ddl.auto">${db.hbm2ddl.auto}</prop>
@@ -52,17 +58,69 @@
 	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />		
 	</bean>
+	
+	
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
 
 	<!--
 		DAOs
 	-->
-	
-	
-	
-	<bean id="MediaManagerDB" class="ca.jc2brown.mmdb.MediaManagerDB">
-		<property name="sessionFactory" ref="sessionFactory" />		
-		<property name="main" ref="MediaManagerDB" />	
+	<bean id="actorDao" 	class="ca.jc2brown.mmdb.dao.ActorDao" >
+  		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="directorDao" 	class="ca.jc2brown.mmdb.dao.DirectorDao" >
+  		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="genreDao" 	class="ca.jc2brown.mmdb.dao.GenreDao" >
+  		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="movieDao" 	class="ca.jc2brown.mmdb.dao.MovieDao" >
+  		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="movieFileDao" class="ca.jc2brown.mmdb.dao.MovieFileDao" >
+  		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="ratingDao" 	class="ca.jc2brown.mmdb.dao.RatingDao" >
+  		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="writerDao" 	class="ca.jc2brown.mmdb.dao.WriterDao" >
+  		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	
+	
+	
+	<!--
+		Services
+	-->
+	
+	
+	<!--
+		GUI
+	-->
+	
+	<bean id="applicationWindow" class="ca.jc2brown.mmdb.gui.ui.ApplicationWindow"/>
+	
+	
+	<!--
+		Application
+	-->
+	
+	
+	<bean id="mmdb" class="ca.jc2brown.mmdb.MediaManagerDB">
+		<!-- 
+		Spring can't autowire a bean to itself. There may be an annotation-based
+		workaround, but this legacy solution is good enough for now. -->
+		<property name="main" ref="mmdb" />
+	</bean>
+	
+	
+	<bean id="mmdbProperties" class="ca.jc2brown.mmdb.utils.GroupedProperties">
+		<!-- lazy must appear before configLocation if not omitted (default false) -->
+		<property name="lazy" value="true" />
+		<property name="configLocation" value="config/mmdb.properties" />
+	</bean>
+	
+	<bean id="fileFilters" class="ca.jc2brown.mmdb.file.FileFilters" />
 
 </beans>
