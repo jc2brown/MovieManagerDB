@@ -47,7 +47,6 @@ public class Utils {
 	
 	public static String mapToString( Map<String,String> map) {
 		StringBuffer sb = new StringBuffer();
-		//sb.append("  ");
 		for ( Entry<String,String> entry : map.entrySet() ) {
 			sb.append(entry.getKey());
 			sb.append("=");

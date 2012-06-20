@@ -9,7 +9,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import ca.jc2brown.mmdb.model.mapping.MappedField;
+import ca.jc2brown.framework.mapping.MappedField;
 
 @Entity
 @Table(name="People")

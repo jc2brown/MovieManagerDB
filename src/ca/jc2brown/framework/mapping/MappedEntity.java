@@ -1,4 +1,4 @@
-package ca.jc2brown.mmdb.model.mapping;
+package ca.jc2brown.framework.mapping;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 
 import ca.jc2brown.mmdb.utils.Utils;
 
-@MappedClass
 public abstract class MappedEntity {
 	
 	private static Logger log = Logger.getLogger( MappedEntity.class.getName() );

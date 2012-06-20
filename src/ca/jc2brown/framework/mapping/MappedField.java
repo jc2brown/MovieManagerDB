@@ -1,4 +1,4 @@
-package ca.jc2brown.mmdb.model.mapping;
+package ca.jc2brown.framework.mapping;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -14,8 +14,8 @@ import java.lang.annotation.Target;
  *   {field1="field1 value" field2="field2 value" etc...}
  *   
  * If the field's default toString method is undesirable, 
- * pass the name of an alternative method with the same signature as toString, 
- * which is located in the field's declaring class and reads the field (this means no static methods).
+ * pass the name of an alternative method with the same signature as toString.
+ * The method must be in the field's declaring class or a superclass, and may not be static.
  * 
  */
 

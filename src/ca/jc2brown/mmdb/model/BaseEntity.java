@@ -7,11 +7,13 @@ import javax.persistence.MappedSuperclass;
 
 import org.apache.log4j.Logger;
 
-import ca.jc2brown.mmdb.model.mapping.MappedEntity;
-import ca.jc2brown.mmdb.model.mapping.MappedField;
+import ca.jc2brown.framework.mapping.MappedEntity;
+import ca.jc2brown.framework.mapping.MappedField;
 
 @MappedSuperclass
 public abstract class BaseEntity extends MappedEntity {
+	
+	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger( BaseEntity.class.getName() );
 	
 	

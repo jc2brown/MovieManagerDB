@@ -4,11 +4,9 @@ package ca.jc2brown.mmdb.model;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-import ca.jc2brown.mmdb.model.mapping.MappedClass;
-import ca.jc2brown.mmdb.model.mapping.MappedField;
+import ca.jc2brown.framework.mapping.MappedField;
 
 @MappedSuperclass
-@MappedClass
 public abstract class Person extends BaseEntity {
 	
 	@MappedField

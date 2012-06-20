@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import ca.jc2brown.mmdb.model.mapping.MappedField;
+import ca.jc2brown.framework.mapping.MappedField;
 
 
 @Entity
@@ -22,12 +22,17 @@ public class Movie extends BaseEntity {
 	private Set<Genre> genres;
 	private List<MovieFile> movieFiles;
 	private String plot;
+	@MappedField
 	private Rating rating;
+	@MappedField
 	private String reception;
+	@MappedField
 	private Date released;
+	@MappedField
 	private Long runtime;
 	@MappedField
 	private String title;
+	@MappedField
 	private Long year;
 	
 	

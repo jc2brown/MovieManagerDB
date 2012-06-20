@@ -12,12 +12,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
+import ca.jc2brown.framework.mapping.MappingConfigurer;
 import ca.jc2brown.mmdb.dao.ActorDai;
 import ca.jc2brown.mmdb.gui.ui.ApplicationWindow;
 import ca.jc2brown.mmdb.model.Actor;
 import ca.jc2brown.mmdb.model.BaseEntity;
 import ca.jc2brown.mmdb.model.Movie;
-import ca.jc2brown.mmdb.model.mapping.MappingConfigurer;
 import ca.jc2brown.mmdb.utils.GroupedProperties;
 
 @Service
@@ -158,9 +158,7 @@ public class MediaManagerDB {
     	movie.setTitle("The Good");
     	movies.add( movie );
     	actor.setMovies(movies);
-  		
-    	System.err.println(actor.toMap());
-    	
+  		    	
   		System.out.println( movie );
   		System.out.println( actor );
   		
