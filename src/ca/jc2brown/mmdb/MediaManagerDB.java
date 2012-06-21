@@ -1,23 +1,28 @@
 package ca.jc2brown.mmdb;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.log4j.Logger;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.TabFolder;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
-import ca.jc2brown.framework.mapping.MappingConfigurer;
-import ca.jc2brown.mmdb.dao.ActorDai;
-import ca.jc2brown.mmdb.gui.ui.ApplicationWindow;
-import ca.jc2brown.mmdb.model.Actor;
+import ca.jc2brown.generic.dao.GenericDai;
+import ca.jc2brown.generic.dao.GenericDao;
+import ca.jc2brown.generic.model.ModelEntity;
+import ca.jc2brown.generic.model.ModelConfigurer;
+import ca.jc2brown.generic.ui.GenericTabItem;
+import ca.jc2brown.generic.ui.GenericTable;
+import ca.jc2brown.mmdb.gui.ApplicationWindow;
 import ca.jc2brown.mmdb.model.BaseEntity;
 import ca.jc2brown.mmdb.model.Movie;
+import ca.jc2brown.mmdb.model.MovieFile;
 import ca.jc2brown.mmdb.utils.GroupedProperties;
 
 @Service
@@ -68,15 +73,11 @@ public class MediaManagerDB {
 	// Application 
 	//
 
+	@SuppressWarnings("unused")
 	private GroupedProperties mmdbProperties;
 	private ApplicationWindow window;
 	
-	private ActorDai actorDao;
-	
-	@Autowired
-	public void setActorDao(ActorDai actorDao) {
-		this.actorDao = actorDao;
-	}
+	private SessionFactory sessionFactory;
 	
 	
 	@Autowired
@@ -89,6 +90,11 @@ public class MediaManagerDB {
 		this.window = window;
 	}
 
+	@Autowired
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	
 	// Application initilization
   	public MediaManagerDB() {
   		log.info("Initializing...");
@@ -96,7 +102,13 @@ public class MediaManagerDB {
     
   	@PostConstruct
   	public void init() {
-  		window.open();
+  		String basePackage = BaseEntity.class.getPackage().getName();
+		try {
+			ModelConfigurer.configure(basePackage);
+		} catch (Exception e) {
+			e.printStackTrace();
+			bail(e.toString());
+		}
   	}
   	
   	@PreDestroy
@@ -105,70 +117,73 @@ public class MediaManagerDB {
   	}
   	
   	
-
-  	
-  	public void test() {
-  		Actor actor = new Actor();
-  		actor.setId(123L);
-    	actor.setFullName("Chris Brown");
-    	actor.setFirstName("Chris");
-    	actor.setLastName("Brown");
-    	Set<Movie> movies = new HashSet<Movie>();
-    	Movie movie = new Movie();
-    	movie.setTitle("The Good");
-    	movies.add( movie );
-    	actor.setMovies(movies);
+    // Begin regular execution
+	public void run() {
+  		
+  		GenericDao.setSessionFactoryHolder(sessionFactory);
+	
+		TabFolder tabFolder = new TabFolder(window, SWT.NONE);
+		GridData gd_tabFolder_1 = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gd_tabFolder_1.widthHint = 300;
+		tabFolder.setLayoutData(gd_tabFolder_1);
+  		
     	
-    	actor = actorDao.makePersistent(actor);
-    	System.out.println(actor);
-    	System.out.println(movie);
-    	
+		MovieFile movieFile1 = new MovieFile();
+    	movieFile1.setFilename("TheGood.mpg");
+    	movieFile1.setSequence(0L);
 
-    	actorDao.makeTransient(actor);
-    	actor.setFullName("Stephen Harper");
-    	actor.setFirstName("Stephen");
-    	actor.setLastName("Harper");
-    	movie.setTitle("The Bad");
-    	System.out.println(actor);
     	
+    	Movie movie1 = new Movie();
+    	movie1.setTitle("The Good");
+    	movie1.addMovieFile(movieFile1);
+    	movie1.addGenre("Comedy");
+    	movie1.addGenre("Action");
+    	    	
+    	GenericDao.smakePersistent(movie1);
 
-    	for (Actor a : actorDao.findAll() ) {
-    		System.err.println(a);
+    	movie1.addGenre("Romance");
+    	   	
+    	
+		MovieFile movieFile2 = new MovieFile();
+		movieFile2.setFilename("TheBad.mpg");
+		movieFile2.setSequence(0L);
+
+    	Movie movie2 = new Movie();
+    	movie2.setTitle("The Bad");
+    	movie2.addMovieFile(movieFile2);
+    	movie2.addGenre("Comedy");
+    	movie2.addGenre("Action");
+
+    	movie2 = GenericDao.smakePersistent(movie2);
+    	
+    	for ( int i = 0; i < 1000; i++ ) {
+    		MovieFile movieFile = new MovieFile();
+    		movieFile.setFilename("TheBad" + i + ".mpg");
+    		movieFile.setSequence(0L);
+        	Movie movie = new Movie();
+        	movie.setTitle("The Bad " + i);
+        	movie.addMovieFile(movieFile);
+        	movie.addGenre("Genre " + i / 10);
+        	GenericDao.smakePersistent(movie);
     	}
     	
-    	
-    	actor = actorDao.findById(2L, false);
-    	System.out.println(actor);
-  	}
-  	
-  	
-    // Begin regular execution
-  	public void run() {
-  		
-  		String basePackage = BaseEntity.class.getPackage().getName();
-  		MappingConfigurer.configure(basePackage);
-  		
-  		Actor actor = new Actor();
-  		actor.setId(123L);
-    	actor.setFullName("Chris Brown");
-    	actor.setFirstName("Chris");
-    	actor.setLastName("Brown");
-    	Set<Movie> movies = new HashSet<Movie>();
-    	Movie movie = new Movie();
-    	movie.setTitle("The Good");
-    	movies.add( movie );
-    	actor.setMovies(movies);
-  		    	
-  		System.out.println( movie );
-  		System.out.println( actor );
-  		
-  		
-  		/*
-  		TableFieldParser tfp = new TableFieldParser();
-  		tfp.parse(Actor.class);
-  		test();*/
+    
+		for ( Class<? extends ModelEntity> clazz : ModelConfigurer.ModelEntityes ) {
+			GenericTabItem tab = new GenericTabItem(tabFolder, SWT.NONE, clazz.getSimpleName());
+			GenericTable table = new GenericTable(tabFolder, SWT.BORDER | SWT.FULL_SELECTION, clazz.getSimpleName(), ModelEntity.getMap(clazz).keySet() );
+			tab.setControl(table);
+			GenericDai<? extends ModelEntity> dao = GenericDao.getDao(clazz);
+			table.setDao(dao);
+			table.updated();
+		}
+		
+  		window.open();
+  	  		
 		MediaManagerDB.quit();	
   	}
+	
+	
+	
   	
   	private void shutdown() {
   		log.info("Starting shutdown...");

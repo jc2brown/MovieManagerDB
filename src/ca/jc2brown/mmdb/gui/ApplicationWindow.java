@@ -1,19 +1,18 @@
-package ca.jc2brown.mmdb.gui.ui;
+package ca.jc2brown.mmdb.gui;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ca.jc2brown.mmdb.gui.ui.table.ActorTable;
 import ca.jc2brown.mmdb.utils.GroupedProperties;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Table;
 
 public class ApplicationWindow extends Shell {
 
 	private GroupedProperties mmdbProperties;
-	private Table table;
 	
 	@Autowired
 	public void setMmdbProperties(GroupedProperties mmdbProperties) {
@@ -21,12 +20,11 @@ public class ApplicationWindow extends Shell {
 	}
 	
 	public ApplicationWindow() {
-		setSize(747, 420);
+		setSize(1024, 600);
 		setLayout(new GridLayout(1, false));
 		
-		new ActorTable(this, SWT.BORDER | SWT.FULL_SELECTION);
 		
-		/*Menu menu = new Menu(this, SWT.BAR);
+		Menu menu = new Menu(this, SWT.BAR);
 		setMenuBar(menu);
 		
 		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
@@ -46,54 +44,7 @@ public class ApplicationWindow extends Shell {
 		
 		MenuItem mntmAbout = new MenuItem(menu_2, SWT.NONE);
 		mntmAbout.setText("About");
-		
-		TabFolder tabFolder_1 = new TabFolder(this, SWT.NONE);
-		GridData gd_tabFolder_1 = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gd_tabFolder_1.widthHint = 119;
-		tabFolder_1.setLayoutData(gd_tabFolder_1);
-		
-		TabItem tbtmBrowse = new TabItem(tabFolder_1, SWT.NONE);
-		tbtmBrowse.setText("Browse");
-		
-		TabFolder tabFolder = new TabFolder(tabFolder_1, SWT.NONE);
-		tbtmBrowse.setControl(tabFolder);
-		
-		TabItem tbtmMovies = new TabItem(tabFolder, SWT.NONE);
-		tbtmMovies.setText("Movies");
-		
-		table = new Table(tabFolder, SWT.BORDER | SWT.FULL_SELECTION);
-		tbtmMovies.setControl(table);
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		
-		TableColumn tblclmnTitle = new TableColumn(table, SWT.NONE);
-		tblclmnTitle.setWidth(100);
-		tblclmnTitle.setText("Title");
-		
-		TableColumn tblclmnActors = new TableColumn(table, SWT.NONE);
-		tblclmnActors.setWidth(100);
-		tblclmnActors.setText("Movie File");
-		
-		TabItem tbtmActors = new TabItem(tabFolder, SWT.NONE);
-		tbtmActors.setText("Actors");
-		
-		TabItem tbtmDirectors = new TabItem(tabFolder, SWT.NONE);
-		tbtmDirectors.setText("Directors");
-		
-		TabItem tbtmWriters = new TabItem(tabFolder, SWT.NONE);
-		tbtmWriters.setText("Writers");
-		
-		TabItem tbtmGenres = new TabItem(tabFolder, SWT.NONE);
-		tbtmGenres.setText("Genres");
-		
-		TabItem tbtmRatings = new TabItem(tabFolder, SWT.NONE);
-		tbtmRatings.setText("Ratings");
-		
-		TabItem tbtmFiles = new TabItem(tabFolder, SWT.NONE);
-		tbtmFiles.setText("Files");
-		
-		TabItem tbtmSearch = new TabItem(tabFolder_1, SWT.NONE);
-		tbtmSearch.setText("Search");
+		/*
 		
 		Composite composite = new Composite(tabFolder_1, SWT.NONE);
 		tbtmSearch.setControl(composite);
@@ -149,7 +100,7 @@ public class ApplicationWindow extends Shell {
     }
 	
     protected void createContents() {
-    	setSize(450, 300);
+    	setSize(1024, 600);
     	setText(mmdbProperties.getProperty("app.name"));
     }
 	

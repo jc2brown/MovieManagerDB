@@ -1,5 +1,7 @@
-package ca.jc2brown.mmdb.dao;
+package ca.jc2brown.generic.dao;
 import java.util.List;
+
+import org.hibernate.SessionFactory;
 
 public interface GenericDai<T> {
  
@@ -12,4 +14,6 @@ public interface GenericDai<T> {
     T makePersistent(T entity);
  
     void makeTransient(T entity);
+
+	void setSessionFactory(SessionFactory sessionFactory);
 }

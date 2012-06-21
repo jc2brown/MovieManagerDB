@@ -7,17 +7,17 @@ import javax.persistence.MappedSuperclass;
 
 import org.apache.log4j.Logger;
 
-import ca.jc2brown.framework.mapping.MappedEntity;
-import ca.jc2brown.framework.mapping.MappedField;
+import ca.jc2brown.generic.model.ModelEntity;
+import ca.jc2brown.generic.model.ModelField;
 
 @MappedSuperclass
-public abstract class BaseEntity extends MappedEntity {
+public abstract class BaseEntity extends ModelEntity {
 	
 	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger( BaseEntity.class.getName() );
 	
 	
-	@MappedField
+	@ModelField
 	private Long id;
 	
 	public void setId(Long id) {
@@ -32,7 +32,14 @@ public abstract class BaseEntity extends MappedEntity {
 	
 	public BaseEntity() {
 		super();
-		id = null;
+	}
+	
+
+	public String[] compProps = { "id" };
+	
+
+	public String toIdString() {
+		return id.toString();
 	}
 }
 

@@ -10,7 +10,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="People")
+@Table(name="Writer")
 public class Writer extends Person {
 	
 	private Set<Movie> movies;

@@ -5,8 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
@@ -43,22 +41,5 @@ public class Utils {
 		log.debug("Loaded properties file " + path);
 		return props;
 	}
-	
-	
-	public static String mapToString( Map<String,String> map) {
-		StringBuffer sb = new StringBuffer();
-		for ( Entry<String,String> entry : map.entrySet() ) {
-			sb.append(entry.getKey());
-			sb.append("=");
-			sb.append("\"");
-			sb.append(entry.getValue());
-			sb.append("\" ");
-		}
-		return sb.toString();
-	}
-	
-
-	
-	
 	
 }

@@ -4,57 +4,60 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import ca.jc2brown.framework.mapping.MappedField;
+import ca.jc2brown.generic.dao.GenericDao;
+import ca.jc2brown.generic.model.ModelField;
 
 
 @Entity
 @Table(name="Movies")
 public class Movie extends BaseEntity {
-	
-	private Set<Genre> genres;
+
+	@ModelField
+	private Set<MovieGenre> movieGenres;
+	@ModelField
 	private List<MovieFile> movieFiles;
+	@ModelField
 	private String plot;
-	@MappedField
+	@ModelField
 	private Rating rating;
-	@MappedField
+	@ModelField
 	private String reception;
-	@MappedField
+	@ModelField
 	private Date released;
-	@MappedField
+	@ModelField
 	private Long runtime;
-	@MappedField
+	@ModelField(rep=true)
 	private String title;
-	@MappedField
+	@ModelField
 	private Long year;
 	
-	
-	@ManyToMany
-	@JoinTable(name	= "MovieGenres", 
-	joinColumns 		= { @JoinColumn(name = "GenreId") }, 
-	inverseJoinColumns 	= { @JoinColumn(name = "MovieId") })
-	public Set<Genre> getGenres() {
-		return genres;
+	@OneToMany(cascade=CascadeType.ALL)
+	@JoinColumn(name="MovieId")
+	public Set<MovieGenre> getMovieGenres() {
+		return movieGenres;
 	}
-	public void setGenres(Set<Genre> genres) {
-		this.genres = genres;
+	public void setMovieGenres(Set<MovieGenre> movieGenres) {
+		this.movieGenres = movieGenres;
 	}
 	
-	@OneToMany
+	@OneToMany (cascade=CascadeType.ALL, mappedBy="movie", fetch=FetchType.EAGER)
+	@Column(name="id")
 	public List<MovieFile> getMovieFiles() {
 		return movieFiles;
 	}
 	public void setMovieFiles(List<MovieFile> movieFiles) {
 		this.movieFiles = movieFiles;
 	}
-
+	
 	public String getPlot() {
 		return plot;
 	}
@@ -62,7 +65,7 @@ public class Movie extends BaseEntity {
 		this.plot = plot;
 	}
 
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="RatingId")
 	public Rating getRating() {
 		return rating;
@@ -109,7 +112,23 @@ public class Movie extends BaseEntity {
 	
 	public Movie() {
 		super();
-	}	
+	}
+	
+	
+	public void addGenre(String genre) {
+		MovieGenre movieGenre = new MovieGenre();
+		movieGenre.setMovie(this);
+		movieGenre.setGenre(GenericDao.smakePersistent(new Genre(genre)));
+		movieGenres = add(movieGenres, movieGenre);
+	}
+	
+	
+	public void addMovieFile(MovieFile movieFile) {
+		movieFile.setMovie(this);
+		movieFiles = add(movieFiles, movieFile);
+	}
 	
 
+	
+	
 }

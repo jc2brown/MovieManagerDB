@@ -30,12 +30,11 @@
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${db.driver}" />
-		<property name="url" value="${db.url}/${db.schema};shutdown=true" />
+		<property name="url" value="${db.url}${db.schema};shutdown=true" />
 		<property name="username" value="${db.username}" />
 		<property name="password" value="${db.password}" />
 	</bean>
 
-	
 	<!--
 		Hibernate
 	-->
@@ -46,7 +45,7 @@
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
-				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.show_sql">false</prop>
 				<prop key="hibernate.format_sql">false</prop>
 				<prop key="hibernate.use_sql_comments">true</prop>
 				<prop key="hibernate.default_schema">${db.schema}</prop>
@@ -64,33 +63,6 @@
 
 
 	<!--
-		DAOs
-	-->
-	<bean id="actorDao" 	class="ca.jc2brown.mmdb.dao.ActorDao" >
-  		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>
-	<bean id="directorDao" 	class="ca.jc2brown.mmdb.dao.DirectorDao" >
-  		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>
-	<bean id="genreDao" 	class="ca.jc2brown.mmdb.dao.GenreDao" >
-  		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>
-	<bean id="movieDao" 	class="ca.jc2brown.mmdb.dao.MovieDao" >
-  		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>
-	<bean id="movieFileDao" class="ca.jc2brown.mmdb.dao.MovieFileDao" >
-  		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>
-	<bean id="ratingDao" 	class="ca.jc2brown.mmdb.dao.RatingDao" >
-  		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>
-	<bean id="writerDao" 	class="ca.jc2brown.mmdb.dao.WriterDao" >
-  		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>
-	
-	
-	
-	<!--
 		Services
 	-->
 	
@@ -99,7 +71,7 @@
 		GUI
 	-->
 	
-	<bean id="applicationWindow" class="ca.jc2brown.mmdb.gui.ui.ApplicationWindow"/>
+	<bean id="applicationWindow" class="ca.jc2brown.mmdb.gui.ApplicationWindow"/>
 	
 	
 	<!--

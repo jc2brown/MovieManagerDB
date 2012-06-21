@@ -10,10 +10,12 @@
     <mapping class="ca.jc2brown.mmdb.model.Director"/>
     <mapping class="ca.jc2brown.mmdb.model.Genre"/>
     <mapping class="ca.jc2brown.mmdb.model.Movie"/>
+    <mapping class="ca.jc2brown.mmdb.model.MovieGenre"/>
     <mapping class="ca.jc2brown.mmdb.model.MovieFile"/>
     <mapping class="ca.jc2brown.mmdb.model.Person"/>
     <mapping class="ca.jc2brown.mmdb.model.Rating"/>
     <mapping class="ca.jc2brown.mmdb.model.Writer"/>
   </session-factory>
+  
   
 </hibernate-configuration>

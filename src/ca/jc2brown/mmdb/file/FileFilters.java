@@ -43,9 +43,10 @@ public class FileFilters extends HashMap<String, FileFilter> {
 	
 	
 	public FileFilters() {}
-	
+
 	@PostConstruct
-	private void init() {
+	@SuppressWarnings("unused")
+	private void initialize() {
 		this.videotypes = mmdbProperties.getValueList("videotypes");
 		this.metatypes = new ArrayList<String>();
 		this.metatypes.add(mmdbProperties.getProperty("metatype"));
